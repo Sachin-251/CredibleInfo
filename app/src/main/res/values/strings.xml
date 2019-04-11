@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">CredibleInfo</string>
+    <string name="txtEmail">Enter Email</string>
+    <string name="txtPassword">Enter Password</string>
+    <string name="btnLogin">LOGIN</string>
+    <string name="btnSignup">SIGNUP</string>
+    <string name="edName">Name</string>
+    <string name="edEmail">Email</string>
+    <string name="edMobile">Mobile</string>
+    <string name="edLocation">Location</string>
+    <string name="edLinks">Links</string>
+    <string name="edSkills">Skills</string>
+    <string name="btnSave">Save</string>
+    <string name="edOrganisation">Organisation</string>
+    <string name="edDesignation">Designation</string>
+    <string name="chkCurrent">Currently work here</string>
+    <string name="edInstitute">University/College</string>
+    <string name="edDegree">Degree</string>
+    <string name="personal">Personal Details</string>
+    <string name="professional">Professional Details</string>
+    <string name="education">Education</string>
+    <string name="certificate">Add your certificate</string>
+    <string name="prof">Professional</string>
+    <string name="person">Personal</string>
+    <string name="dot">...</string>
+    <string name="logout">Log out</string>
+</resources>
