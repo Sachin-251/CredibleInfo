@@ -60,36 +60,30 @@ public class PersonalDetails extends AppCompatActivity {
         {
             Intent implicit=new Intent(Intent.ACTION_PICK);
             File pic= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-            String path=pic.getPath();
+           String path=pic.getPath();
             Uri data= Uri.parse(path);
             implicit.setDataAndType(data, "image/*");
             startActivityForResult(implicit, request);
         }
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if(resultCode==RESULT_OK)
-        {
-            if (requestCode == request)
-            {
-                Uri imgUri = data.getData();
-                InputStream stream;
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == request) {
                 try {
-                    stream = getContentResolver().openInputStream(imgUri);
-                    BitmapFactory.Options opt=new BitmapFactory.Options();
-                    opt.inJustDecodeBounds=true;
+                    Uri imgUri = data.getData();
+                    InputStream stream;
 
-                    while(bit==null)
-                        bit =BitmapFactory.decodeStream(stream);
-                    Bitmap.createScaledBitmap(bit, 100,100,true);
-                    img.setImageBitmap(bit);
-                    FixBitmap=((BitmapDrawable)img.getDrawable()).getBitmap();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, "Unable to Open image", Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    stream = getContentResolver().openInputStream(imgUri);
+                    BitmapFactory.Options opt = new BitmapFactory.Options();
+                    opt.inJustDecodeBounds = true;
+
+
+                    FixBitmap = BitmapFactory.decodeStream(stream);
+                    Bitmap.createScaledBitmap(FixBitmap, 100, 100, true);
+                    img.setImageBitmap(FixBitmap);
+                    //FixBitmap=((BitmapDrawable)img.getDrawable()).getBitmap();
+                } catch (Exception ex) {
                 }
             }
         }
@@ -150,7 +144,7 @@ public class PersonalDetails extends AppCompatActivity {
     {
         if(v==save)
         {
-            //savePersonal();
+            savePersonal();
             //uploadImage();
             Intent professional=new Intent(this, ProfessionalDetails.class);
             startActivity(professional);

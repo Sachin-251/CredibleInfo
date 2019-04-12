@@ -55,9 +55,6 @@ public class ProfessionalDetails extends AppCompatActivity {
                     eMonth.setVisibility(View.INVISIBLE);
                     eYear.setVisibility(View.INVISIBLE);
                     divider.setVisibility(View.INVISIBLE);
-                    Date date= Calendar.getInstance().getTime();
-                    SimpleDateFormat date_format=new SimpleDateFormat("dd-mm-yyyy");
-                    enDate=date_format.format(date);
                 }
                 else{
                     eMonth.setVisibility(View.VISIBLE);
@@ -84,11 +81,11 @@ public class ProfessionalDetails extends AppCompatActivity {
         {
             if(current.isChecked())
             {
-                endDate=enDate;
+                endDate="Currently working";
             }
             else
                 endDate="01-"+eMonth.getSelectedItem().toString()+"-"+eYear.getSelectedItem().toString();
-            //proffesionalDetails();
+            proffesionalDetails();
             Intent education=new Intent(this,EducationDetails.class);
             startActivity(education);
         }
