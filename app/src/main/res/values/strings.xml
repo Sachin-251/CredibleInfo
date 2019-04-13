@@ -24,4 +24,6 @@
     <string name="person">Personal</string>
     <string name="dot">...</string>
     <string name="logout">Log out</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +36,7 @@ public class PublicView extends AppCompatActivity {
     ConstraintLayout optLayout, main;
     ImageView back;
     String loc, mob, links, skills, name, organ, design, eDate, sDate, univ, degree, eduLoc, sYear, eYear;
-
+    Button update;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +55,7 @@ public class PublicView extends AppCompatActivity {
         fName = (TextView) findViewById(R.id.publicName);
         fLoc = (TextView) findViewById(R.id.publicLoc);
         fOrgan = (TextView) findViewById(R.id.publicOrgan);
+        update=(Button)findViewById(R.id.btnUpdate);
         getPersonal();
         getEducation();
         getProfessional();
@@ -109,12 +111,31 @@ public class PublicView extends AppCompatActivity {
         if (v == education) {
             divider.animate().translationX(-400f).setDuration(500);
             setEdu();
+            update.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent in=new Intent(PublicView.this,EducationUpdate.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putString("Organisation", univ);
+                    bundle.putString("Degree", degree);
+                    bundle.putString("Location", eduLoc);
+                    in.putExtras(bundle);
+                    startActivity(in);
+                }
+            });
         } else if (v == professional) {
             divider.animate().translationX(-5f).setDuration(500);
             setPro();
         } else if (v == personal) {
             divider.animate().translationX(400f).setDuration(500);
             getPer();
+            update.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent in=new Intent(PublicView.this,PersonalUpdate.class);
+                    startActivity(in);
+                }
+            });
         }
     }
 
@@ -338,7 +359,7 @@ public class PublicView extends AppCompatActivity {
 
         test.setText("Organisation    :" + univ);
         test.append("\nDegree :" + degree);
-        test.append("\nLocation :" + loc);
+        test.append("\nLocation :" + eduLoc);
         test.append("\nStart Year   :" + sYear);
         test.append("\nEnd Year    :" + eYear);
     }

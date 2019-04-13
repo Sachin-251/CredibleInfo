@@ -32,7 +32,7 @@ public class PersonalDetails extends AppCompatActivity {
 
     ImageView img;
     int request=1234;
-    Button save;
+    public static Button save;
     public static String UID;
     EditText name,email,mobile,location,links,skills;
     Bitmap FixBitmap;
@@ -58,33 +58,30 @@ public class PersonalDetails extends AppCompatActivity {
     {
         if(v==img)
         {
-            Intent implicit=new Intent(Intent.ACTION_PICK);
-            File pic= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-           String path=pic.getPath();
-            Uri data= Uri.parse(path);
-            implicit.setDataAndType(data, "image/*");
-            startActivityForResult(implicit, request);
+            Intent intent = new Intent(Intent.ACTION_PICK,
+                    MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+            intent.setType("image/*");
+            intent.putExtra("crop", "true");
+            intent.putExtra("scale", true);
+            intent.putExtra("outputX", 256);
+            intent.putExtra("outputY", 256);
+            intent.putExtra("aspectX", 1);
+            intent.putExtra("aspectY", 1);
+            intent.putExtra("return-data", true);
+            startActivityForResult(intent, 1);
         }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == request) {
-                try {
-                    Uri imgUri = data.getData();
-                    InputStream stream;
-
-                    stream = getContentResolver().openInputStream(imgUri);
-                    BitmapFactory.Options opt = new BitmapFactory.Options();
-                    opt.inJustDecodeBounds = true;
-
-
-                    FixBitmap = BitmapFactory.decodeStream(stream);
-                    Bitmap.createScaledBitmap(FixBitmap, 100, 100, true);
-                    img.setImageBitmap(FixBitmap);
-                    //FixBitmap=((BitmapDrawable)img.getDrawable()).getBitmap();
-                } catch (Exception ex) {
-                }
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        if (requestCode == 1) {
+            final Bundle extras = data.getExtras();
+            if (extras != null) {
+                //Get image
+                Bitmap FixBitmap = extras.getParcelable("data");
+                img.setImageBitmap(FixBitmap);
             }
         }
     }
@@ -145,11 +142,15 @@ public class PersonalDetails extends AppCompatActivity {
         if(v==save)
         {
             savePersonal();
-            //uploadImage();
+//            uploadImage();
             Intent professional=new Intent(this, ProfessionalDetails.class);
             startActivity(professional);
         }
     }
+
+
+
+
 
     private boolean savePersonal(){
 
