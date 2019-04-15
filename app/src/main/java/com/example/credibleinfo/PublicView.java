@@ -35,7 +35,7 @@ public class PublicView extends AppCompatActivity {
     public static TextView test;
     ConstraintLayout optLayout, main;
     ImageView back;
-    String loc, mob, links, skills, name, organ, design, eDate, sDate, univ, degree, eduLoc, sYear, eYear;
+    String loc, mob, links, skills, name, organ, design, eDate, sDate, univ, degree, eduLoc, sYear, eYear, email;
     Button update;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,14 +59,9 @@ public class PublicView extends AppCompatActivity {
         getPersonal();
         getEducation();
         getProfessional();
-        //setPro();
-//        fName.setText("Blah Blah");
-        //fSet();
+
     }
 
-    public void fSet() {
-        fName.setText(this.name);
-    }
 
     public void setClickable(View view) {
         if (view != null) {
@@ -126,6 +121,17 @@ public class PublicView extends AppCompatActivity {
         } else if (v == professional) {
             divider.animate().translationX(-5f).setDuration(500);
             setPro();
+            update.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent in=new Intent(PublicView.this,ProfessionalUpdate.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putString("Organisation", organ);
+                    bundle.putString("Designation", design);
+                    in.putExtras(bundle);
+                    startActivity(in);
+                }
+            });
         } else if (v == personal) {
             divider.animate().translationX(400f).setDuration(500);
             getPer();
@@ -133,6 +139,14 @@ public class PublicView extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent in=new Intent(PublicView.this,PersonalUpdate.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putString("Name", name);
+                    bundle.putString("Email", email);
+                    bundle.putString("Mobile", mob);
+                    bundle.putString("Location", loc);
+                    bundle.putString("Links", links);
+                    bundle.putString("Skills", skills);
+                    in.putExtras(bundle);
                     startActivity(in);
                 }
             });
@@ -218,6 +232,7 @@ public class PublicView extends AppCompatActivity {
             mob = result.getString("mobile_no");
             links = result.getString("links");
             skills = result.getString("skills");
+            email = result.getString("email");
             fName.setText(name);
             fLoc.setText(loc);
         } catch (JSONException e) {

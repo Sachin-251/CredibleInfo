@@ -7,6 +7,7 @@ public class Config {
     public static final String URL_PP="http://139.59.65.145:9090/user/personaldetail/pp/post";
     public static final String URL_PROF="http://139.59.65.145:9090/user/professionaldetail/"+MainActivity.id;
     public static final String URL_EDUCATION="http://139.59.65.145:9090/user/educationdetail/"+MainActivity.id;
+    public static final String URL_CERT="http://139.59.65.145:9090/user/educationdetail/certificate";
 
 
 

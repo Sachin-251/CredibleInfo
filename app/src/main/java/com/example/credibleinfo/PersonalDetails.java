@@ -1,15 +1,21 @@
 package com.example.credibleinfo;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -27,6 +33,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 
 public class PersonalDetails extends AppCompatActivity {
 
@@ -38,11 +45,35 @@ public class PersonalDetails extends AppCompatActivity {
     Bitmap FixBitmap;
     ByteArrayOutputStream byteArrayOutputStream;
     byte[] byteArray;
-    String ConvertImage;
+    String ConvertImage,path;
     Bitmap bit=null;
+    Uri fileUri;
+    String picturePath;
+    Uri selectedImage;
+    Bitmap photo;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode==1)
+        {
+            if(grantResults.length>0&&grantResults[0]==PackageManager.PERMISSION_GRANTED)
+            {
+                getPhoto();
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+            {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+            }
+        }
         setContentView(R.layout.activity_personal_details);
         img=(ImageView)findViewById(R.id.imgPersonal);
         save=(Button)findViewById(R.id.btnSave);
@@ -54,34 +85,42 @@ public class PersonalDetails extends AppCompatActivity {
         skills=(EditText)findViewById(R.id.edSkills);
     }
 
+    public void getPhoto()
+    {
+        Intent implicit=new Intent(Intent.ACTION_PICK);
+        File pic= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        String path=pic.getPath();
+        Uri data= Uri.parse(path);
+        implicit.setDataAndType(data, "image/*");
+        startActivityForResult(implicit, request);
+    }
+
+
     public void getImage(View v)
     {
         if(v==img)
         {
-            Intent intent = new Intent(Intent.ACTION_PICK,
-                    MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-            intent.setType("image/*");
-            intent.putExtra("crop", "true");
-            intent.putExtra("scale", true);
-            intent.putExtra("outputX", 256);
-            intent.putExtra("outputY", 256);
-            intent.putExtra("aspectX", 1);
-            intent.putExtra("aspectY", 1);
-            intent.putExtra("return-data", true);
-            startActivityForResult(intent, 1);
+            getPhoto();
         }
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != RESULT_OK) {
-            return;
-        }
-        if (requestCode == 1) {
-            final Bundle extras = data.getExtras();
-            if (extras != null) {
-                //Get image
-                Bitmap FixBitmap = extras.getParcelable("data");
-                img.setImageBitmap(FixBitmap);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(resultCode==RESULT_OK)
+        {
+            if (requestCode == request)
+            {
+                Uri imgUri = data.getData();
+                InputStream stream;
+                try {
+                    stream = getContentResolver().openInputStream(imgUri);
+                    bit = BitmapFactory.decodeStream(stream);
+                    img.setImageBitmap(bit);
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Unable to Open image", Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
@@ -142,7 +181,7 @@ public class PersonalDetails extends AppCompatActivity {
         if(v==save)
         {
             savePersonal();
-//            uploadImage();
+         uploadImage();
             Intent professional=new Intent(this, ProfessionalDetails.class);
             startActivity(professional);
         }

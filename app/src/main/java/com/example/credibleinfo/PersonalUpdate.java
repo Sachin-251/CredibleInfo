@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -41,6 +42,20 @@ public class PersonalUpdate extends AppCompatActivity {
         location=(EditText)findViewById(R.id.edLoca);
         links=(EditText)findViewById(R.id.edLink);
         skills=(EditText)findViewById(R.id.edSkill);
+        Intent intent=getIntent();
+        Bundle bundle=intent.getExtras();
+        String txt1=bundle.getString("Name");
+        String txt2=bundle.getString("Email");
+        String txt3=bundle.getString("Mobile");
+        String txt4=bundle.getString("Location");
+        String txt5=bundle.getString("Links");
+        String txt6=bundle.getString("Skills");
+        name.setText(txt1);
+        email.setText(txt2);
+        mobile.setText(txt3);
+        location.setText(txt4);
+        links.setText(txt5);
+        skills.setText(txt6);
     }
 
 
@@ -55,6 +70,37 @@ public class PersonalUpdate extends AppCompatActivity {
 
     }
 
+    public void getImage(View v)
+    {
+        if(v==img)
+        {
+            Intent intent = new Intent(Intent.ACTION_PICK,
+                    MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+            intent.setType("image/*");
+            intent.putExtra("crop", "true");
+            intent.putExtra("scale", true);
+            intent.putExtra("outputX", 256);
+            intent.putExtra("outputY", 256);
+            intent.putExtra("aspectX", 1);
+            intent.putExtra("aspectY", 1);
+            intent.putExtra("return-data", true);
+            startActivityForResult(intent, 1);
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        if (requestCode == 1) {
+            final Bundle extras = data.getExtras();
+            if (extras != null) {
+                //Get image
+                Bitmap FixBitmap = extras.getParcelable("data");
+                img.setImageBitmap(FixBitmap);
+            }
+        }
+    }
 
     public boolean updatePersonal(){
 
